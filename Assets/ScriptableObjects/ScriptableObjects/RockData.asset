@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 882a7500509e6804db7b8bfa05c7880e, type: 3}
   m_Name: RockData
   m_EditorClassIdentifier: Assembly-CSharp::ItemsData
-  itemname: Rock
-  maxThrowForce: 15
+  itemName: Rock
+  itemMass: 3
   throwCurve:
     serializedVersion: 2
     m_Curve:

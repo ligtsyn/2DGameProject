@@ -4,26 +4,25 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteractions : MonoBehaviour
 {
-    [SerializeField] private GameObject scopeObject;
     [SerializeField] private LayerMask itemsLayer;
     [SerializeField] private Transform itemHolder;
     [SerializeField] private float interactionDistance;
-    [SerializeField] private float minScopeValue;
-    [SerializeField] private float maxScopeValue;
+    [SerializeField] private float maxThrowingForce;
 
-    private Coroutine forceCoroutine;
     private ObjectScript objectScript;
+    private ScopeDirectionScript scopeScript;
     private PlayerMovement playerMovement;
+    private Coroutine forceCoroutine;
     private GameObject heldItem;
     private Rigidbody2D itemRb;
     private Vector2 rayDirection;
-    private float currentThrowingForce;
+    private float forceMultiplier;
     private bool isForceCharging = false;
 
     void Start()
     {
+        scopeScript = GetComponentInChildren<ScopeDirectionScript>(true);
         playerMovement = GetComponent<PlayerMovement>();
-        scopeObject.SetActive(false);
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -46,6 +45,24 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
 
+    public void OnThrow(InputAction.CallbackContext context)
+    {
+        if (heldItem == null) return;
+        Vector2 mouseDir = (scopeScript.MouseDir() - (Vector2)transform.position).normalized;
+
+        if (context.performed)
+        {
+            ManageForceCoroutine();
+        }
+        if (context.canceled)
+        {
+            isForceCharging = false;
+            objectScript.ThrowThis(mouseDir, maxThrowingForce, forceMultiplier);
+            heldItem = null;
+        }
+    }
+
+
     private void PickUpItem(GameObject itemObject)
     {
         heldItem = itemObject;
@@ -56,30 +73,15 @@ public class PlayerInteractions : MonoBehaviour
 
         itemObject.transform.SetParent(itemHolder);
         itemObject.transform.localPosition = Vector2.zero;
-        objectScript = itemObject.GetComponent<ObjectScript>();
-    }
 
-    public void OnThrow(InputAction.CallbackContext context)
-    {
-        if (heldItem == null) return;
-
-        if (context.performed)
-        {
-            ManageForceCoroutine();
-        }
-        if (context.canceled)
-        {
-            isForceCharging = false;
-            objectScript.ThrowThis(rayDirection, currentThrowingForce);
-            heldItem = null;
-        }
+        objectScript = heldItem.GetComponent<ObjectScript>();
     }
 
     private void ManageForceCoroutine()
     {
         if(forceCoroutine != null)
             StopCoroutine(forceCoroutine);
-        currentThrowingForce = 0f;
+        forceMultiplier = 0f;
         isForceCharging = true;
         forceCoroutine = StartCoroutine(ForceChargerCoroutine());
     }
@@ -87,15 +89,14 @@ public class PlayerInteractions : MonoBehaviour
     private IEnumerator ForceChargerCoroutine()
     {
         while (isForceCharging) {
-            currentThrowingForce += 1 * Time.deltaTime;
-            currentThrowingForce = Mathf.Clamp(currentThrowingForce, 0, 1f);
-            Debug.Log(currentThrowingForce);
+            forceMultiplier += 1 * Time.deltaTime;
+            forceMultiplier = Mathf.Clamp(forceMultiplier, 0, 1f);
+
+            scopeScript.ScopePosition(gameObject.transform.position, heldItem.GetComponent<ObjectScript>().GetItemWheight(),
+                maxThrowingForce,forceMultiplier);
+
             yield return null;
         }
-    }
-
-    private Vector3 MouseDir()
-    {
-        return Vector3.zero;
+        scopeScript.DeActivateScope();
     }
 }

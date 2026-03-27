@@ -13,17 +13,18 @@
         private void Start()
         {
             rigidb = GetComponent<Rigidbody2D>();
+            rigidb.mass = _data.itemMass;
         }
 
-        public void ThrowThis(Vector2 throwDirection, float forceMultiplier)
+        public void ThrowThis(Vector2 throwDirection,float maxThrowForce, float forceMultiplier)
         {
             if(scaleRoutine != null)
                 StopCoroutine(scaleRoutine);
 
             transform.SetParent(null);
             rigidb.simulated = true;
-        
-            rigidb.AddForce(throwDirection * _data.maxThrowForce * forceMultiplier, ForceMode2D.Impulse);
+
+            rigidb.AddForce(throwDirection * maxThrowForce * forceMultiplier, ForceMode2D.Impulse);
             scaleRoutine = StartCoroutine(ScaleCoroutine());
         }
 
@@ -48,4 +49,6 @@
             rigidb.linearVelocity = Vector2.zero;
             scaleRoutine = null;
         }
+
+        public float GetItemWheight() { return _data.itemMass; }
     }

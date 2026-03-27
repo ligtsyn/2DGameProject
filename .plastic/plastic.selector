@@ -1,0 +1,4 @@
+repository "2DGameProject/infinityShelf@6872812270741@cloud"
+  path "/"
+    br "/main"
+    co "/main"

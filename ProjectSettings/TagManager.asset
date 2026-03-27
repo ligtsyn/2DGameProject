@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Item
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Obstacle
+  - Water
+  - UI
+  - Items
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: BackGround
+    uniqueID: 2582554407
+    locked: 0
+  - name: Player
+    uniqueID: 900403709
+    locked: 0
+  m_RenderingLayers:
+  - Default

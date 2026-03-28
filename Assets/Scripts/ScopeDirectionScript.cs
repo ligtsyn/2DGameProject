@@ -20,10 +20,7 @@ public class ScopeDirectionScript : MonoBehaviour
 
         Vector2 direction = (MouseDir() - origin).normalized;
     
-        float initialSpeed = (forceMultiplier * maxThrowingForce) / itemWheight;
-        
-        float flightTime = 2.0f;
-        float distance = flightTime * initialSpeed;
+        float distance = (forceMultiplier * maxThrowingForce) / itemWheight;
 
         Vector2 scopeLocalPos = origin + distance * direction;
         transform.position = (Vector3)scopeLocalPos;
